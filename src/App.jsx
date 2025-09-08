@@ -19,15 +19,17 @@ function App() {
     try {
       setLoading(true)
       
-      // Simulate user authentication for demo
+      // Get current user (in production, this would come from Farcaster frame context)
       const user = await userService.getCurrentUser()
       setCurrentUser(user)
       
-      // Load feedback
-      const feedback = await feedbackService.getFeedback()
+      // Load feedback with user context for vote status
+      const feedback = await feedbackService.getFeedback(user?.userId)
       setFeedbackList(feedback)
     } catch (error) {
       console.error('Failed to initialize app:', error)
+      // Set empty state on error to prevent infinite loading
+      setFeedbackList([])
     } finally {
       setLoading(false)
     }
